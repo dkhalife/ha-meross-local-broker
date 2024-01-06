@@ -13,6 +13,3 @@
 
 # Bin startup scripts
 /meross_local_broker/rootfs/usr/local/bin/*.sh text eol=lf
-
-# MDNS register utility
-/meross_local_broker/rootfs/opt/custom_broker/mdns_register.py text eol=lf

@@ -14,12 +14,6 @@ else
   debug=""
 fi
 
-# Generate a random password for agent user
-AGENT_USERNAME="_agent"
-AGENT_PASSWORD=$(openssl rand -base64 32)
-AGENT_PBKDF2=$(/usr/share/mosquitto/pw -p $AGENT_PASSWORD)
-echo "$AGENT_USERNAME:$AGENT_PBKDF2">/etc/mosquitto/auth.pw
-
 # Wait until mqtt is ready is available
 bashio::log.info "Waiting MQTT server..."
 bashio::net.wait_for 2001
