@@ -7,9 +7,6 @@ ARG BUILD_ARCH
 # Versions
 ENV HIVEMQ='b2043e7fcbd5897a3799869d42c6202122221fbc' \
   LIBWEBSOCKETS='3.1.0' \
-  MOSQUITTO='2.0.10' \
-  MOSQUITTO_GO_AUTH='1.5.0' \
-  MOSQUTTO_DISCONNECT='0.0.1' \
   GOVERSION=1.16.4
 
 # Set shell
@@ -90,41 +87,9 @@ RUN mkdir -p /tmp/go \
   -DLWS_WITH_ZLIB=OFF \
   && make \
   && make install \
-  && git clone --branch "v${MOSQUITTO}" --depth=1 https://github.com/eclipse/mosquitto.git /tmp/mosquitto \
-  && git clone --branch "v${MOSQUTTO_DISCONNECT}" --depth=1 https://github.com/albertogeniola/mosquitto-disconnections-plugin.git /tmp/mosquitto-disconnections-plugin \
-  && mkdir -p /tmp/mosquitto/plugins/disconnections \
-  && cp -R /tmp/mosquitto-disconnections-plugin/src/* /tmp/mosquitto/plugins/disconnections \
-  && echo "add_subdirectory(disconnections)" >> /tmp/mosquitto/plugins/CMakeLists.txt \
-  && cd /tmp/mosquitto \
-  && cmake . \
-  -D WITH_ADNS=OFF \
-  -D WITH_DOCS=OFF \
-  -D WITH_MEMORY_TRACKING=OFF \
-  -D WITH_TLS_PSK=OFF \
-  -D WITH_WEBSOCKETS=ON \
-  -D WITH_CJSON=OFF \
-  -D WITH_CLIENTS=OFF \
-  -D WITH_BROKER=ON \
-  -D WITH_PLUGINS=ON \
-  -D DOCUMENTATION=OFF \
-  && make install \
-  && mkdir -p /usr/share/mosquitto \
-  && cp /usr/local/lib/mosquitto_disconnections.so /usr/share/mosquitto/mosquitto_disconnections.so \
-  && cd /tmp \
-  && git clone --depth 1 --branch "${MOSQUITTO_GO_AUTH}" \
-  https://github.com/iegomez/mosquitto-go-auth.git \
-  && export GOPROXY='direct' \
-  && cd mosquitto-go-auth \
-  && make CFLAGS="-I/usr/local/include -fPIC" LDFLAGS="-shared -Wl,-unresolved-symbols=ignore-all" \
-  && cp /tmp/mosquitto-go-auth/pw /usr/share/mosquitto/pw \
-  && cp /tmp/mosquitto-go-auth/go-auth.so /usr/share/mosquitto/go-auth.so \
-  && chmod +x /usr/share/mosquitto/pw \
-  && addgroup --system mosquitto \
-  && adduser --system --no-create-home --disabled-login --group mosquitto \
   && apt-get clean \
   && rm -fr \
   /etc/nginx \
-  /opt/mosquitto.conf \
   /opt/acl \
   /tmp/*
 
@@ -134,8 +99,6 @@ RUN pip3 install -r requirements.txt
 
 WORKDIR /
 COPY rootfs /
-COPY --chown=mosquitto:mosquitto --chmod=0755 rootfs/etc/mosquitto/certs /etc/mosquitto/
-
 
 RUN mkdir -p /var/run/mdns/meross-mqtt && mkdir -p /var/run/mdns/meross-http-api
 

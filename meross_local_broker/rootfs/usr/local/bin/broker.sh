@@ -20,12 +20,6 @@ AGENT_PASSWORD=$(openssl rand -base64 32)
 AGENT_PBKDF2=$(/usr/share/mosquitto/pw -p $AGENT_PASSWORD)
 echo "$AGENT_USERNAME:$AGENT_PBKDF2">/etc/mosquitto/auth.pw
 
-# Grant to the _agent user permissions to:
-# - read from /appliance/+/publish
-# - write to /app/+/subscribe
-#echo -e "user $AGENT_USERNAME\ntopic read /appliance/+/publish\ntopic write /app/+/subscribe">/etc/mosquitto/auth.acl
-echo -e "user $AGENT_USERNAME\ntopic readwrite #">/etc/mosquitto/auth.acl
-
 # Wait until mqtt is ready is available
 bashio::log.info "Waiting MQTT server..."
 bashio::net.wait_for 2001

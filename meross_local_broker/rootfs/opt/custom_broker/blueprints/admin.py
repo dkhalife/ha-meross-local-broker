@@ -134,10 +134,9 @@ def set_account():
     
     dbhelper.add_update_configuration(enable_meross_link=meross_link, local_user_id=user.user_id)
 
-    # As soon as the Account is set, we need to restart the mosquitto and the broker services
-    _LOGGER.warn("Restarting broker & MQTT services (due to account configuration changes)")
+    # As soon as the Account is set, we need to restart the broker service
+    _LOGGER.warn("Restarting broker service (due to account configuration changes)")
     service_manager.restart_service("Local Agent")
-    service_manager.restart_service("MQTT Service")
 
     # TODO: Restart/Reload broker?
     return jsonify(user.serialize())
