@@ -11,11 +11,9 @@ arch:
   - i386
 init: false
 ports:
-  2001/tcp: 2001
   2003/tcp: 2003
   10001/tcp: 10001
 ports_description:
-  2001/tcp: "MQTT Broker port"
   2003/tcp: "HTTP API port"
   10001/tcp: "Remote debugger port"
 ingress: true
