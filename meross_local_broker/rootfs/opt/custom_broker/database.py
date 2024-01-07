@@ -20,19 +20,9 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 
-def add_password_upgraded_column():
-    engine.execute(text('ALTER TABLE users ADD password_upgraded Boolean DEFAULT 1'))
-    engine.execute(text('UPDATE users SET password_upgraded=0'))
-
-
 def init_db():
     # import all modules here that might define models so that
     # they will be registered properly on the metadata.  Otherwise
     # you will have to import them first before calling init_db()
     Base.metadata.create_all(bind=engine)
 
-    # Upgrade process.
-    # Add the user.password_upgraded column
-    results = engine.execute(text('SELECT * FROM pragma_table_info("users") WHERE name = "password_upgraded"'))
-    if len(list(results))==0:
-        add_password_upgraded_column()

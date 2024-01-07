@@ -17,8 +17,6 @@ from logger import get_logger
 from messaging import make_api_response
 from model.exception import BadRequestError
 
-# _LOGOUT_URL = "/v1/Profile/logout"
-
 # Configure the current logger
 _LOGGER = get_logger("http_api")
 

@@ -1,7 +1,5 @@
 from hashlib import md5
 from uuid import uuid4
-from meross_iot.model.credentials import MerossCloudCreds
-
 from logger import get_logger
 import argparse
 from constants import DEFAULT_USER_ID
@@ -10,11 +8,7 @@ from db_helper import dbhelper
 from model.db_models import User
 from model.enums import EventType
 
-
-from meross_iot.http_api import MerossHttpClient
-
 l = get_logger("setup")
-
 
 def setup_account(email: str, password: str) -> User:
     user_key = str(md5(uuid4().bytes).hexdigest().lower())
@@ -29,10 +23,8 @@ def setup_account(email: str, password: str) -> User:
     dbhelper.store_event(event_type=EventType.CONFIGURATION_CHANGE, details=f"Login username/password has been changed.")
     return user
 
-
 def main():
     init_db()
-   
 
 if __name__ == '__main__':
     main()

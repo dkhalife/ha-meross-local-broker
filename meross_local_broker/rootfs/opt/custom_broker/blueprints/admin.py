@@ -118,14 +118,11 @@ def set_account():
         raise BadRequestError(msg=f"Missing json payload.")
     email: str = payload.get('email')
     password: str = payload.get('password')
-    meross_link: bool = payload.get('enableMerossLink', False)
     if email is None:
         raise BadRequestError(msg=f"Missing or invalid email.")
     if password is None:
         raise BadRequestError(msg=f"Missing or invalid password.")
-    if meross_link is None:
-        raise BadRequestError(msg=f"Missing or invalid enableMerossLink option.")
-    
+
     # Setup Account
     try:
         user = setup_account(email=email, password=password)

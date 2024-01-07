@@ -30,5 +30,3 @@ class EventType(Enum):
     SERVICE_START = "SERVICE_START"
     SERVICE_STOP = "SERVICE_STOP"
     SERVICE_RESTART = "SERVICE_RESTART"
-    
-    

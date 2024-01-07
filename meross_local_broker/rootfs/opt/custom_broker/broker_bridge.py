@@ -19,26 +19,26 @@ class BrokerDeviceBridge:
                  broker,
                  device_uuid: str,
                  device_client_id: str,
-                 meross_device_mac: str,
-                 meross_user_id: str,
+                 device_mac: str,
+                 user_id: str,
                  meross_key: str,
-                 meross_mqtt_server: str = "mqtt.meross.com",
-                 meross_mqtt_port: int = 2001):
+                 mqtt_server: str,
+                 mqtt_port: int):
 
         self._l = RLock()
         self._broker_ref = broker
         self._connected = False
         self._uuid = device_uuid
-        self._user_id = meross_user_id
-        self._hostname = meross_mqtt_server
-        self._port = meross_mqtt_port
-        self._username = meross_device_mac
+        self._user_id = user_id
+        self._hostname = mqtt_server
+        self._port = mqtt_port
+        self._username = device_mac
         self._key = meross_key
         md5_hash = md5()
-        strtohash = f"{meross_device_mac}{meross_key}"
+        strtohash = f"{device_mac}{meross_key}"
         md5_hash.update(strtohash.encode("utf8"))
         pwdhash = md5_hash.hexdigest().lower()
-        self._password = f"{meross_user_id}_{pwdhash}"
+        self._password = f"{user_id}_{pwdhash}"
         self._c = mqtt.Client(client_id=device_client_id, clean_session=True, protocol=mqtt.MQTTv311, transport="tcp")
         self._c.username_pw_set(username=self._username, password=self._password)
 
