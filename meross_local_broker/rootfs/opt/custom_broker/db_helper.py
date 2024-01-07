@@ -190,11 +190,10 @@ class DbHelper:
         q = self._s.query(Configuration).filter(Configuration.configuration_id==0).first()
         return q
 
-    def add_update_configuration(self, enable_meross_link:bool, local_user_id:str) -> Configuration:
+    def add_update_configuration(self, local_user_id:str) -> Configuration:
         q: Configuration = self._s.query(Configuration).filter(Configuration.configuration_id==0).first()
         if (q is None):
             q = Configuration(configuration_id=0)
-        q.enable_meross_link = enable_meross_link
         q.local_account_id = local_user_id
         self._s.add(q)
         self._s.commit()

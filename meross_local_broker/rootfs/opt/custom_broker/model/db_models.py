@@ -184,7 +184,6 @@ class Event(Base, Serializer):
 class Configuration(Base, Serializer):
     __tablename__ = 'configuration'
     configuration_id = Column(Integer, primary_key=True)
-    enable_meross_link = Column(Boolean, default=False)
     local_account_id = Column(String, ForeignKey('users.user_id'))
     local_account = relationship("User")
 

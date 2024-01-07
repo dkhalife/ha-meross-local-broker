@@ -46,7 +46,6 @@ def parse_args():
     parser.add_argument('--debug', dest='debug', action='store_true', help='When set, prints debug messages')
     parser.add_argument('--cert-ca', required=True, type=str, help='Path to the root CA certificate path')
     parser.set_defaults(debug=False)
-    parser.set_defaults(enable_bridging=False)
     return parser.parse_args()
 
 
@@ -66,14 +65,12 @@ class Broker:
                  port: int,
                  username: str,
                  password: str,
-                 cert_ca: str,
-                 enable_bridging: bool):
+                 cert_ca: str):
         self.hostname = hostname
         self.port = port
         self.username = username
         self.password = password
         self.cert_ca = cert_ca
-        self.bridging_enabled = enable_bridging
         self.c = mqtt.Client(client_id="broker", clean_session=True, protocol=mqtt.MQTTv311, transport="tcp")
         self.c.username_pw_set(username=self.username, password=self.password)
 
@@ -180,11 +177,6 @@ class Broker:
                 device_uuid, user)
         self.c.publish(topic=f"/app/{user.user_id}/subscribe", payload=json.dumps(payload))
 
-        # In case there is a bridged remote connection, forward the event to the remote broker as well
-        if self.bridging_enabled:
-            self._forward_message_to_remote(bridge_uuid=device_uuid, topic=topic,
-                                            payload=json.dumps(payload).encode("utf8"))
-
     def _handle_message_to_agent(self, topic: str, payload: dict) -> None:
         # Try to guess the channels from the system_all payload
         namespace = payload.get('header', {}).get('namespace', None)
@@ -253,9 +245,6 @@ class Broker:
             l.info("Setting last update timestamp to %s for device %s", ts, appliance_uuid)
             self._devices_sys_info_timestamp[device.uuid] = ts
 
-            if self.bridging_enabled:
-                self._get_or_create_bridge(device_uuid=device.uuid)
-
     def _handle_device_disconnected(self, payload: dict) -> None:
         if payload.get("event") != "disconnect":
             l.warning("Invalid or unhandled event received: %s", payload.get("event"))
@@ -299,24 +288,6 @@ class Broker:
                 p = json.loads(payload)
                 self._handle_device_disconnected(payload=p)
                 return
-
-            # Handling NATTED messages if bridging is enabled
-            if self.bridging_enabled:
-                match = _NAT_RE.fullmatch(topic)
-                if match is not None:
-                    nat_table_index = match.group(1)
-                    nat_entry = self._nat_table.get(nat_table_index)
-                    if nat_entry is None:
-                        l.error("Invalid _NAT_ address received. Message will be discarded.")
-                        return
-                    original_topic = nat_entry.get("original_from_attribute")
-                    originating_bridge_uuid = nat_entry.get("originating_bridge_uuid")
-                    #p = json.loads(payload)
-                    #p['header']['from'] = original_topic
-                    #original_payload = json.dumps(p).encode('utf8')
-                    self._forward_message_to_remote(topic=original_topic, payload=payload,
-                                                    bridge_uuid=originating_bridge_uuid)
-                    return
 
             # Handling messages pushed to APPLIANCE publication topics
             match = APPLIANCE_PUBLISH_TOPIC_RE.fullmatch(topic)
@@ -421,19 +392,11 @@ def main():
     # Set all devices to unknown online status
     dbhelper.reset_device_online_status()
 
-    # Check if we need to enable the bridging feature
-    enable_meross_bridge = False
-    conf = dbhelper.get_configuration()
-    if conf is not None and conf.enable_meross_link:
-        l.info("Enabling meross bridging as per saved configuration")
-        enable_meross_bridge = True
-
     b = Broker(hostname=args.host,
                port=args.port,
                username=args.username,
                password=args.password,
-               cert_ca=args.cert_ca,
-               enable_bridging=enable_meross_bridge)
+               cert_ca=args.cert_ca)
 
     reconnect_interval = 10  # [seconds]
     while True:

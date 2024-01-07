@@ -128,11 +128,11 @@ def set_account():
     
     # Setup Account
     try:
-        user = setup_account(email=email, password=password, enable_meross_link=meross_link)
+        user = setup_account(email=email, password=password)
     except BadLoginException as e:
         raise BadRequestError(msg=f"Invalid credentials.")
     
-    dbhelper.add_update_configuration(enable_meross_link=meross_link, local_user_id=user.user_id)
+    dbhelper.add_update_configuration(local_user_id=user.user_id)
 
     # As soon as the Account is set, we need to restart the broker service
     _LOGGER.warn("Restarting broker service (due to account configuration changes)")
