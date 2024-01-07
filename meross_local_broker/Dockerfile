@@ -15,6 +15,9 @@ WORKDIR /usr/src
 RUN apt-get update \
   && apt-get install --no-install-recommends -y gnupg gpg-agent \
   && apt-get --no-install-recommends install -y \
+  build-essential \
+  libffi-dev \
+  python3-dev \
   bash \
   sqlite \
   openssl \

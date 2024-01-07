@@ -17,10 +17,6 @@ if [[ $REINIT_DB == "true" ]]; then
   fi
 fi
 
-# Configure env-vars
-ingress_entry=$(bashio::addon.ingress_entry)
-sed -i "s#%%APIURL%%#${ingress_entry}#g" /var/www/assets/env.js
-
 # Initializing DB
 pushd /opt/custom_broker >/dev/null
 
