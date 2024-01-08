@@ -6,17 +6,6 @@ source /opt/utils/bashutils.sh
 
 DB_PATH=/data/database.db
 
-# If the user has asked to reinit the db, remove it.
-# Since we want to expose this functionality both from HA and Stand-Alone container,
-# we need to fetch it also from HA
-REINIT_DB=$(get_option 'reinit_db' 'false')
-if [[ $REINIT_DB == "true" ]]; then
-  if [[ -f $DB_PATH ]]; then
-    bashio::log.warning "User configuration requires DB reinitialization. Removing previous DB data."
-    rm $DB_PATH
-  fi
-fi
-
 # Initializing DB
 pushd /opt/custom_broker >/dev/null
 
