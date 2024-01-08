@@ -90,7 +90,7 @@ class Broker:
         self._nat_table = ExpiringDict(max_age_seconds=30, max_len=50000)
 
     def setup(self):
-        l.debug("Connecting as %s : %s", self.username, self.password)
+        l.debug("Connecting as %s to %s:%s", self.username, self.hostname, self.port)
         self.c.connect(host=self.hostname, port=self.port)
 
     def _on_connect(self, client, userdata, rc, other):
