@@ -13,34 +13,44 @@ WORKDIR /usr/src
 # Install base dependencies
 # hadolint ignore=DL3003
 RUN apt-get update \
-  && apt-get install --no-install-recommends -y gnupg gpg-agent \
-  && apt-get --no-install-recommends install -y \
-  build-essential \
-  libffi-dev \
-  python3-dev \
-  bash \
-  sqlite \
-  openssl \
-  python3 \
-  python3-setuptools \
-  python3-pip \
-  nginx \
-  logrotate \
-  libglib2.0-0 \
-  libglib2.0-dev \
-  libdbus-1-dev \
-  && pip3 install wheel
+  && apt-get install --no-install-recommends -y \
+    bash \
+    build-essential \
+    gnupg gpg-agent \
+    libdbus-1-dev \
+    libffi-dev \
+    libglib2.0-0 \
+    libglib2.0-dev \
+    logrotate \
+    nginx \
+    openssl \
+    python3 \
+    python3-dev \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
+    sqlite3 \
+    python3-flask \
+    python3-sqlalchemy \
+    python3-paho-mqtt \
+    python3-flask-cors \
+    python3-expiringdict \
+    python3-packaging \
+;
 
-# Setup GO source # export GOARM=7 ;
+RUN pip3 install \
+  meross_iot \
+  asyncio-mqtt \
+  dbus-python \
+  debugpy \
+;
+
 RUN apt-get clean \
   && rm -fr \
   /etc/nginx \
   /opt/acl \
-  /tmp/*
-
-# Copy the requirements.txt file and install the listed packages
-COPY rootfs/opt/custom_broker/requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+  /tmp/* \
+;
 
 WORKDIR /
 COPY rootfs /
