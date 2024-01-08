@@ -1,6 +1,6 @@
 #!/bin/bash
-# In order to run on the host-network, add the "--network host" parameter
-docker run --rm \
+docker run \
+    --rm \
     --privileged \
     -p 2003:2003/tcp \
     -p 10001:10001/tcp \
