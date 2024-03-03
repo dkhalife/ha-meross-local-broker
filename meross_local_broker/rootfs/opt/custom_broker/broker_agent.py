@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument('--username', type=str, required=True, help='MQTT username')
     parser.add_argument('--password', type=str, required=True, help='MQTT password')
     parser.add_argument('--debug', dest='debug', action='store_true', help='When set, prints debug messages')
-    parser.add_argument('--cert-ca', required=True, type=str, help='Path to the root CA certificate path')
+    parser.add_argument('--cert-ca', required=True, type=str, help='Path to the root certificate')
     parser.set_defaults(debug=False)
     return parser.parse_args()
 
@@ -75,7 +75,7 @@ class Broker:
         self.c.username_pw_set(username=self.username, password=self.password)
 
         context = ssl.create_default_context(cafile=self.cert_ca)
-        context.check_hostname = False
+        context.check_hostname = True
         context.verify_mode = ssl.CERT_REQUIRED
         self.c.tls_set_context(context)
 
