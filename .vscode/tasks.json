@@ -2,43 +2,29 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "[LOCAL] Build Addon container",
-      "type": "process",
-      "command": "wsl.exe",
+      "label": "Build",
+      "type": "shell",
+      "command": ".local_debug/build_addon_locally.sh",
       "presentation": {
         "reveal": "always",
         "panel": "new"
       },
-      "args": [
-        ".local_debug/build_addon_locally.sh"
-      ],
       "problemMatcher": []
     },
     {
-      "label": "[LOCAL] Run Addon container",
-      "type": "process",
-      "command": "wsl.exe",
+      "label": "Run",
+      "type": "shell",
+      "command": ".local_debug/run_addon_locally.sh",
       "presentation": {
         "reveal": "always",
         "panel": "new"
       },
-      "args": [
-        ".local_debug/run_addon_locally.sh"
-      ],
-      "problemMatcher": []
-    },
-    {
-      "label": "[LOCAL] Run Addon container [REINIT]",
-      "type": "process",
-      "command": "wsl.exe",
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      },
-      "args": [
-        ".local_debug/run_addon_locally_reinit.sh"
-      ],
-      "problemMatcher": []
-    },
+      "problemMatcher": [],
+      "dependsOn": "Build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
   ]
 }
