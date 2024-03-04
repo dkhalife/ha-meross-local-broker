@@ -19,7 +19,7 @@ MQTT_HOST=$(get_option 'host' '127.0.0.1')
 MQTT_PORT=$(get_option 'port' '8883')
 AGENT_USERNAME=$(get_option 'username' '')
 AGENT_PASSWORD=$(get_option 'password' '')
-CA_CERT=$(get_option 'ca_cert' '/data/ca.crt')
+CA_CERT=$(get_option 'ca_cert' '/data/ssl/ca.crt')
 
 # Wait until mqtt is ready is available
 bashio::log.info "Waiting MQTT server..."
