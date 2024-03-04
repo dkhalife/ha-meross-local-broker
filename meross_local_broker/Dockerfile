@@ -22,7 +22,6 @@ RUN apt-get update \
     libglib2.0-0 \
     libglib2.0-dev \
     logrotate \
-    nginx \
     openssl \
     python3 \
     python3-dev \
@@ -47,7 +46,6 @@ RUN pip3 install \
 
 RUN apt-get clean \
   && rm -fr \
-  /etc/nginx \
   /opt/acl \
   /tmp/* \
 ;

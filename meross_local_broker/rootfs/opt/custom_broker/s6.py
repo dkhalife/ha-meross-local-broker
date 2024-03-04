@@ -84,8 +84,7 @@ class ServiceInfo:
 class ServiceManager:
     _SERVICE_DIRS = {
         "Local API": ServiceDescriptor("Local API", "/var/run/s6/legacy-services/api", "/var/log/api", "Local HTTP web API server"),
-        "Local Agent": ServiceDescriptor("Local Agent", "/var/run/s6/legacy-services/broker", "/var/log/broker", "Local Meross Agent running over MQTT service"),
-        "Web UI Proxy": ServiceDescriptor("Web UI Proxy", "/var/run/s6/legacy-services/nginx", "/var/log/nginx", "Web UI reverse proxy")
+        "Local Agent": ServiceDescriptor("Local Agent", "/var/run/s6/legacy-services/broker", "/var/log/broker", "Local Meross Agent running over MQTT service")
     }
 
     def get_service_info(self, service_name: str) -> Optional[ServiceInfo]:

@@ -8,8 +8,6 @@
 /meross_local_broker/rootfs/etc/services.d/api/log/* text eol=lf
 /meross_local_broker/rootfs/etc/services.d/broker/* text eol=lf
 /meross_local_broker/rootfs/etc/services.d/broker/log/* text eol=lf
-/meross_local_broker/rootfs/etc/services.d/nginx/* text eol=lf
-/meross_local_broker/rootfs/etc/services.d/nginx/log/* text eol=lf
 
 # Bin startup scripts
 /meross_local_broker/rootfs/usr/local/bin/*.sh text eol=lf
