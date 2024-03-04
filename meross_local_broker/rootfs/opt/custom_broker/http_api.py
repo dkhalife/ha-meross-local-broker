@@ -1,5 +1,6 @@
 from os import getenv
 
+import argparse
 from flask import Flask
 from flask_cors import CORS
 from meross_iot.http_api import ErrorCodes
@@ -61,11 +62,20 @@ def handle_http_exception(e):
     return make_api_response(data=None, info=e.error_code.name, api_status=e.error_code)
 
 
-if __name__ == '__main__':
-    debug_env = getenv("ENABLE_DEBUG", None)
-    enable_debug = debug_env.lower() == "true"
+def parse_args():
+    parser = argparse.ArgumentParser(description='Meross local API')
+    parser.add_argument('--port', type=int, help='HTTPS port', default=2002)
+    parser.add_argument('--host', type=str, help='HTTPS server hostname', default='127.0.0.1')
+    parser.add_argument('--debug', dest='debug', action='store_true', help='When set, prints debug messages')
+    parser.add_argument('--cert-ca', required=True, type=str, help='Path to the certificate to use')
+    parser.set_defaults(debug=False)
+    return parser.parse_args()
 
+
+if __name__ == '__main__':
+   # Parse Args
+    args = parse_args()
+ 
     # Bind to localhost, as the traffic is "routed" throughout a front-facing
     # reverse proxy, which filters the inboud traffic.
-    app.run(port=2002, host="127.0.0.1", debug=enable_debug,
-            use_debugger=False, use_reloader=enable_debug)
+    app.run(port=args.port, host=args.host, debug=args.debug, use_debugger=False, use_reloader=args.debug)

@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument('--username', type=str, required=True, help='MQTT username')
     parser.add_argument('--password', type=str, required=True, help='MQTT password')
     parser.add_argument('--debug', dest='debug', action='store_true', help='When set, prints debug messages')
-    parser.add_argument('--cert-ca', required=True, type=str, help='Path to the root certificate')
+    parser.add_argument('--cert-ca', required=True, type=str, help='Path to the certificate to use')
     parser.set_defaults(debug=False)
     return parser.parse_args()
 
