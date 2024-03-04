@@ -5,7 +5,6 @@ from flask_cors import CORS
 from meross_iot.http_api import ErrorCodes
 from meross_iot.model.http.exception import HttpApiError
 
-from blueprints.admin import admin_blueprint
 from blueprints.auth import auth_blueprint
 from blueprints.log import log_blueprint
 from blueprints.device import device_blueprint
@@ -30,7 +29,6 @@ app.register_blueprint(profile_blueprint, url_prefix="/v1/Profile")
 app.register_blueprint(device_blueprint, url_prefix="/v1/Device")
 app.register_blueprint(hub_blueprint, url_prefix='/v1/Hub')
 app.register_blueprint(devs_blueprint, url_prefix="/_devs_")
-app.register_blueprint(admin_blueprint, url_prefix="/_admin_")
 
 # Initialize DB
 init_db()

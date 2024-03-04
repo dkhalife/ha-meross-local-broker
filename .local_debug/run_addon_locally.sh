@@ -4,7 +4,6 @@ docker run \
     --privileged \
     -p 2003:2003/tcp \
     -p 10001:10001/tcp \
-    --env expose_admin_api=true \
     --env advertise=false \
     --env debug_mode=true \
     --env debug_port=10001 \
