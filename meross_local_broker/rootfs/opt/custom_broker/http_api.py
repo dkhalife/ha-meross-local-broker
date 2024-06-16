@@ -16,6 +16,7 @@ from database import db_session, init_db
 from logger import get_logger
 from messaging import make_api_response
 from model.exception import BadRequestError
+import ssl
 
 # Configure the current logger
 _LOGGER = get_logger("http_api")
@@ -30,6 +31,7 @@ app.register_blueprint(profile_blueprint, url_prefix="/v1/Profile")
 app.register_blueprint(device_blueprint, url_prefix="/v1/Device")
 app.register_blueprint(hub_blueprint, url_prefix='/v1/Hub')
 app.register_blueprint(devs_blueprint, url_prefix="/_devs_")
+
 
 # Initialize DB
 init_db()
@@ -68,6 +70,7 @@ def parse_args():
     parser.add_argument('--host', type=str, help='HTTPS server hostname', default='127.0.0.1')
     parser.add_argument('--debug', dest='debug', action='store_true', help='When set, prints debug messages')
     parser.add_argument('--cert-ca', required=True, type=str, help='Path to the certificate to use')
+    parser.add_argument('--cert-key', required=True, type=str, help='Path to the certificate private key')
     parser.set_defaults(debug=False)
     return parser.parse_args()
 
@@ -76,6 +79,7 @@ if __name__ == '__main__':
    # Parse Args
     args = parse_args()
  
-    # Bind to localhost, as the traffic is "routed" throughout a front-facing
-    # reverse proxy, which filters the inboud traffic.
-    app.run(port=args.port, host=args.host, debug=args.debug, use_debugger=False, use_reloader=args.debug)
+    context = ssl.create_default_context()
+    context.load_cert_chain(args.cert_ca, '/data/ssl/key.pem')
+
+    app.run(port=args.port, host=args.host, debug=args.debug, use_debugger=False, use_reloader=args.debug, ssl_context=context)

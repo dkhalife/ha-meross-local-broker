@@ -6,6 +6,7 @@ pushd /opt/custom_broker >/dev/null
 HTTPS_HOST=$(get_option 'https_host' '127.0.0.1')
 HTTPS_PORT=$(get_option 'https_port' '443')
 CA_CERT=$(get_option 'https_cert' '')
+CA_KEY=$(get_option 'https_key' '')
 DEBUG_PORT=$(get_option 'api_debug_port' '')
 
 # Setup debug flag
@@ -23,4 +24,4 @@ fi
 bashio::log.info "Starting flask..."
 bashio::net.wait_for $HTTPS_PORT
 
-exec python3 $debug_prefix ./http_api.py --port $HTTPS_PORT --host "$HTTPS_HOST" --cert-ca "$CA_CERT" $debug_postfix
+exec python3 $debug_prefix ./http_api.py --port $HTTPS_PORT --host "$HTTPS_HOST" --cert-ca "$CA_CERT" --cert-key "$CA_KEY" $debug_postfix
