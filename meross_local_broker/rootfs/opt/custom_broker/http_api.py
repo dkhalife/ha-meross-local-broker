@@ -79,8 +79,7 @@ if __name__ == '__main__':
    # Parse Args
     args = parse_args()
  
-    context = ssl.create_default_context()
-    context.check_hostname = False
+    context = ssl.create_default_context(purpose=ssl.Purpose.CLIENT_AUTH)
     context.load_cert_chain(args.cert_ca, args.cert_key)
 
     app.run(port=args.port, host=args.host, debug=args.debug, use_debugger=False, use_reloader=args.debug, ssl_context=context)
