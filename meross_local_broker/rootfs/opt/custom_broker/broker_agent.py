@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument('--username', type=str, required=True, help='MQTT username')
     parser.add_argument('--password', type=str, required=True, help='MQTT password')
     parser.add_argument('--debug', dest='debug', action='store_true', help='When set, prints debug messages')
-    parser.add_argument('--cert-ca', required=True, type=str, help='Path to the certificate to use')
+    parser.add_argument('--ca-certs', required=True, type=str, help='Path to the certificate to use')
     parser.set_defaults(debug=False)
     return parser.parse_args()
 
@@ -65,19 +65,15 @@ class Broker:
                  port: int,
                  username: str,
                  password: str,
-                 cert_ca: str):
+                 ca_certs: str):
         self.hostname = hostname
         self.port = port
         self.username = username
         self.password = password
-        self.cert_ca = cert_ca
-        self.c = mqtt.Client(client_id="broker", clean_session=True, protocol=mqtt.MQTTv311, transport="tcp")
+        self.ca_certs = ca_certs
+        self.c = mqtt.Client(client_id=CLIENT_ID, clean_session=True, protocol=mqtt.MQTTv311, transport="tcp")
         self.c.username_pw_set(username=self.username, password=self.password)
-
-        context = ssl.create_default_context(cafile=self.cert_ca)
-        context.check_hostname = True
-        context.verify_mode = ssl.CERT_REQUIRED
-        self.c.tls_set_context(context)
+        self.c.tls_set(ca_certs=self.ca_certs)
 
         self.c.on_connect = self._on_connect
         self.c.on_disconnect = self._on_disconnect
@@ -396,7 +392,7 @@ def main():
                port=args.port,
                username=args.username,
                password=args.password,
-               cert_ca=args.cert_ca)
+               ca_certs=args.ca_certs)
 
     reconnect_interval = 10  # [seconds]
     while True:
@@ -405,7 +401,7 @@ def main():
 
             while True:
                 # Every 60 seconds, issue a full device discovery
-                b.c.loop(timeout=60, max_packets=-1)
+                b.c.loop(timeout=60)
                 b.c.loop_forever()
 
         except KeyboardInterrupt as ex:

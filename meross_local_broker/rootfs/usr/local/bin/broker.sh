@@ -5,7 +5,7 @@ pushd /opt/custom_broker >/dev/null
 # Setup MQTT connection params
 MQTT_HOST=$(get_option 'mqtt_host' '127.0.0.1')
 MQTT_PORT=$(get_option 'mqtt_port' '8883')
-CA_CERT=$(get_option 'mqtt_cert' '')
+CA_CERTS=$(get_option 'ca_certs' '')
 DEBUG_PORT=$(get_option 'broker_debug_port' '')
 AGENT_USERNAME=$(get_option 'username' '')
 AGENT_PASSWORD=$(get_option 'password' '')
@@ -25,4 +25,4 @@ fi
 bashio::log.info "Waiting MQTT server..."
 bashio::net.wait_for $MQTT_PORT
 
-exec python3 $debug_prefix broker_agent.py --port $MQTT_PORT --host "$MQTT_HOST" --username "$AGENT_USERNAME" --password "$AGENT_PASSWORD" --cert-ca "$CA_CERT" $debug_postfix
+exec python3 $debug_prefix broker_agent.py --port $MQTT_PORT --host "$MQTT_HOST" --username "$AGENT_USERNAME" --password "$AGENT_PASSWORD" --ca-certs "$CA_CERTS" $debug_postfix
