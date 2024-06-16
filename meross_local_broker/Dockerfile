@@ -31,7 +31,6 @@ RUN apt-get update \
     sqlite3 \
     python3-flask \
     python3-sqlalchemy \
-    python3-paho-mqtt \
     python3-flask-cors \
     python3-expiringdict \
     python3-packaging \
@@ -42,6 +41,7 @@ RUN pip3 install \
   asyncio-mqtt \
   dbus-python \
   debugpy \
+  paho-mqtt \
 ;
 
 RUN apt-get clean \
