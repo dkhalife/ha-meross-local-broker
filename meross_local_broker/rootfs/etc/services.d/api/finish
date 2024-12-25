@@ -1,8 +1,12 @@
-#!/usr/bin/execlineb -S1
+#!/command/with-contenv bashio
+# shellcheck shell=bash
 # ==============================================================================
-# Take down the S6 supervision tree based on service exit code
+# Home Assistant Community Add-on: Example
 # ==============================================================================
-if { s6-test ${1} -ne 0 }
-if { s6-test ${1} -ne 256 }
+declare exit_code
+readonly exit_code_container=$(</run/s6-linux-init-container-results/exitcode)
+readonly exit_code_service="${1}"
+readonly exit_code_signal="${2}"
+readonly service="api"
 
 /run/s6/basedir/bin/halt
