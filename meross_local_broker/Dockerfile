@@ -1,8 +1,4 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
-
-# Build arguments
-ARG BUILD_ARCH
+FROM debian
 
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
