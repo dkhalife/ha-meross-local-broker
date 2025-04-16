@@ -18,5 +18,6 @@ jobs:
 
     - name: Build and push Docker image
       run: |
+        cd meross_local_broker;
         docker build -t ${{ secrets.DOCKER_USERNAME }}/meross-local-broker:latest .
         docker push ${{ secrets.DOCKER_USERNAME }}/meross-local-broker:latest
